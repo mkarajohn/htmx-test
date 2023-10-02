@@ -16,6 +16,7 @@ export const callback = async (req, res) => {
         .replaceAll('{$id}', `${id}`);
     }
 
+    res.append('Access-Control-Expose-Headers', 'hx-trigger');
     res.append('HX-Trigger', 'listLoaded');
     console.log(res);
     res.send(bloglistItems);
