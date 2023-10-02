@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/" />
+    <link href="./index.css" rel="stylesheet" />
+    <script src="https://unpkg.com/htmx.org@1.9.6/dist/htmx.js" crossorigin="anonymous"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Workshop Demo App</title>
+  </head>
+  <body>
+    <div id="root">
+      <main class="app-wrapper">
+        <div class="sidebar-wrapper">
+          <div class="sidebar">
+            <input
+              tabindex="2"
+              placeholder="Search blog posts"
+              type="search"
+              name="search"
+              hx-post="http://localhost:3003/api/blogposts/search"
+              hx-trigger="keyup changed delay:500ms, search"
+              hx-target="#blog-list-container"
+            />
+            <div>
+              <div
+                hx-get="http://localhost:3003/api/blogposts"
+                hx-swap
+                hx-trigger="load"
+                id="blog-list-container"
+              >
+                <div>Loading...</div>
+              </div>
+            </div>
+            <div>
+              <button
+                class="create"
+                tabindex="0"
+                hx-get="http://localhost:3003/api/blogposts/create"
+                hx-target=".main-content-wrapper"
+              >
+                Create new
+              </button>
+            </div>
+          </div>
+        </div>
+        <div data-main-content-wrapper class="main-content-wrapper">
+          <!-- Ideally this should show "loading" until the list of blogs gets fetched. how? -->
+          <div>Loading...</div>
+          <!--          <div class="no-selected-blogpost-message">Select a blog post</div>-->
+        </div>
+      </main>
+    </div>
+  </body>
+  <script>
+    (function () {
+      const contentWrapperEl = document.querySelector('[data-main-content-wrapper]');
+      console.log(contentWrapperEl);
+      document.body.addEventListener('listLoaded', () => {
+        console.log('loaded');
+        contentWrapperEl.innerHTML =
+          '<div class="no-selected-blogpost-message">Select a blog post</div>';
+      });
+    })();
+  </script>
+  <script></script>
+</html>
