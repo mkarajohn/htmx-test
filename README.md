@@ -29,4 +29,8 @@ There are still some bugs and unresolved problems
 * The api returns html instead of json
 * the bloglist on the left loads and is searchable
 * The blog content shows and closes based on selected blog item from the list
-* You can open the "create blog" view but you cannot close it or actually create a new blog
+* You can create a new blogpost and submit it
+
+## Things that don't work
+
+* The preview panel during blog creation
