@@ -2,47 +2,50 @@
   tabindex="0"
   class="blog-list-item"
   id="bloglist-item-{$id}"
+  data-id="{$id}"
   hx-get="http://localhost:3003/api/blogposts/{$id}"
   hx-swap="innerHTML"
   hx-target=".main-content-wrapper"
 >
   <div>
     <span>{$title}</span>
-    <button data-bloglist-item-desc-toggle tabindex="0">+</button>
+    {$toggle}
   </div>
-  <div data-bloglist-item-desc class="hidden">{$desc}</div>
-  <script>
-    (function () {
-      const bloglistEl = window['bloglist-item-{$id}'];
-      const toggleBtnEl = bloglistEl.querySelector('[data-bloglist-item-desc-toggle]');
-      const descEl = bloglistEl.querySelector('[data-bloglist-item-desc]');
+  {$desc}
+</div>
+<script>
+  (function () {
+    const bloglistEl = window['bloglist-item-{$id}'];
+    const toggleBtnEl = bloglistEl.querySelector('[data-bloglist-item-desc-toggle]');
+    const descEl = bloglistEl.querySelector('[data-bloglist-item-desc]');
 
-      if (window.__selectedBlogItem?.id === '{$id}') {
-        debugger;
-        bloglistEl.classList.add('selected');
+    debugger;
+    if (window?.__selectedBlogItem?.id === '{$id}') {
+      bloglistEl.classList.add('selected');
 
-        if (window.__selectedBlogItem.expanded) {
-          toggleBtnEl.innerHTML = '-';
-          descEl.classList.remove('hidden');
-        }
-
-        window.__selectedBlogItem = {
-          ...window?.__selectedBlogItem,
-          element: bloglistEl,
-        };
+      if (window?.__selectedBlogItem.expanded) {
+        toggleBtnEl.innerHTML = '-';
+        descEl?.classList.remove('hidden');
       }
 
-      bloglistEl.addEventListener('click', () => {
-        window.__selectedBlogItem?.element?.classList?.remove('selected');
-        bloglistEl.classList.add('selected');
+      window.__selectedBlogItem = {
+        ...window?.__selectedBlogItem,
+        element: bloglistEl,
+      };
+    }
 
-        debugger;
-        window.__selectedBlogItem = {
-          ...window?.__selectedBlogItem,
-          element: bloglistEl,
-        };
-      });
+    bloglistEl.addEventListener('click', () => {
+      window?.__selectedBlogItem?.element?.classList.remove('selected');
+      bloglistEl.classList.add('selected');
 
+      window.__selectedBlogItem = {
+        id: '{$id}',
+        element: bloglistEl,
+        expanded: !descEl?.classList.contains('hidden'),
+      };
+    });
+
+    if (toggleBtnEl) {
       toggleBtnEl.addEventListener('click', (e) => {
         e.stopPropagation();
         const symbol = toggleBtnEl.innerHTML.trim();
@@ -53,11 +56,13 @@
         }
         descEl.classList.toggle('hidden');
 
-        window.__selectedBlogItem = {
-          ...window?.__selectedBlogItem,
-          expanded: !descEl.classList.contains('hidden'),
-        };
+        if (window?.__selectedBlogItem?.id === '{$id}') {
+          window.__selectedBlogItem = {
+            ...window?.__selectedBlogItem,
+            expanded: !descEl.classList.contains('hidden'),
+          };
+        }
       });
-    })();
-  </script>
-</div>
+    }
+  })();
+</script>

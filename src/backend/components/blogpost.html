@@ -1,20 +1,15 @@
-<button id="close-blog-post-button" tabindex="1" class="close-blogpost-button">Close</button>
+<button
+  id="close-blog-post-button"
+  tabindex="1"
+  class="close-blogpost-button"
+  hx-get="http://localhost:3003/api/blogposts/close"
+  hx-trigger="click"
+  hx-target=".main-content-wrapper"
+>
+  Close
+</button>
 <div class="blogpost">
   <h1>{$title}</h1>
   <h2>{$desc}</h2>
   <div>{$content}</div>
 </div>
-<script>
-  (function () {
-    const buttonEl = window['close-blog-post-button'];
-
-    buttonEl.addEventListener('click', () => {
-      window.__selectedBlogItem.classList.remove('selected');
-      window.__selectedBlogItem = null;
-
-      const contentWrapperEl = document.querySelector('[data-main-content-wrapper]');
-      contentWrapperEl.innerHTML =
-        '<div class="no-selected-blogpost-message">Select a blog post</div>';
-    });
-  })();
-</script>

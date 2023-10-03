@@ -19,14 +19,14 @@
               type="search"
               name="search"
               hx-post="http://localhost:3003/api/blogposts/search"
-              hx-trigger="keyup changed delay:500ms, search"
+              hx-trigger="keyup changed delay:300ms, search"
               hx-target="#blog-list-container"
             />
             <div>
               <div
                 hx-get="http://localhost:3003/api/blogposts"
                 hx-swap
-                hx-trigger="load"
+                hx-trigger="load, postSubmitted from:body"
                 id="blog-list-container"
               >
                 <div>Loading...</div>
@@ -34,6 +34,16 @@
             </div>
             <div>
               <button
+                data-cancel-blog-button
+                class="cancel hidden"
+                tabindex="0"
+                hx-get="http://localhost:3003/api/blogposts/create/cancel"
+                hx-target=".main-content-wrapper"
+              >
+                Cancel
+              </button>
+              <button
+                data-create-blog-button
                 class="create"
                 tabindex="0"
                 hx-get="http://localhost:3003/api/blogposts/create"
@@ -45,9 +55,7 @@
           </div>
         </div>
         <div data-main-content-wrapper class="main-content-wrapper">
-          <!-- Ideally this should show "loading" until the list of blogs gets fetched. how? -->
           <div>Loading...</div>
-          <!--          <div class="no-selected-blogpost-message">Select a blog post</div>-->
         </div>
       </main>
     </div>
@@ -55,11 +63,61 @@
   <script>
     (function () {
       const contentWrapperEl = document.querySelector('[data-main-content-wrapper]');
-      console.log(contentWrapperEl);
-      document.body.addEventListener('listLoaded', () => {
-        console.log('loaded');
-        contentWrapperEl.innerHTML =
-          '<div class="no-selected-blogpost-message">Select a blog post</div>';
+      const createButtonEl = document.querySelector('[data-create-blog-button]');
+      const cancelButtonEl = document.querySelector('[data-cancel-blog-button]');
+
+      document.body.addEventListener('listLoaded', (e) => {
+        if (!window.__selectedBlogItem && e.detail.emptyContent) {
+          contentWrapperEl.innerHTML = e.detail.emptyContent;
+        }
+      });
+
+      document.body.addEventListener('blogLoaded', (e) => {
+        cancelButtonEl.classList.add('hidden');
+        createButtonEl.classList.remove('hidden');
+      });
+
+      document.body.addEventListener('formLoaded', () => {
+        cancelButtonEl.classList.remove('hidden');
+        createButtonEl.classList.add('hidden');
+      });
+
+      document.body.addEventListener('blogClosed', () => {
+        if (window.__selectedBlogItem) {
+          window.__selectedBlogItem.element.classList.remove('selected');
+        }
+        window.__selectedBlogItem = null;
+      });
+
+      document.body.addEventListener('cancelCreate', () => {
+        cancelButtonEl.classList.add('hidden');
+        createButtonEl.classList.remove('hidden');
+
+        if (window.__selectedBlogItem) {
+          htmx.trigger(window.__selectedBlogItem.element, 'click');
+        }
+      });
+
+      document.body.addEventListener('postSubmitted', () => {
+        cancelButtonEl.classList.add('hidden');
+        createButtonEl.classList.remove('hidden');
+
+        setTimeout(() => {
+          if (window.__selectedBlogItem) {
+            window.__selectedBlogItem.element.classList.remove('selected');
+          }
+
+          const element = window['blog-list-container'].lastElementChild.previousElementSibling; //last element is a script tag
+
+          window.__selectedBlogItem = {
+            element,
+            id: element.dataset.id,
+            expanded: false,
+          };
+
+          htmx.trigger(element, 'click');
+          element.scrollIntoView({ behavior: 'smooth' });
+        }, 100);
       });
     })();
   </script>

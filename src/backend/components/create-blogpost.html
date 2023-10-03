@@ -1,10 +1,13 @@
 <div class="create-blogpost-wrapper">
-  <form>
-    <input placeholder="Blog post title" type="text" value="" /><input
-      placeholder="Blog post description"
-      type="text"
-      value=""
-    /><textarea></textarea><button disabled="">Post</button>
+  <form
+    hx-post="http://localhost:3003/api/blogposts/create/submit"
+    hx-trigger="submit"
+    hx-target=".main-content-wrapper"
+  >
+    <input placeholder="Blog post title" type="text" value="" name="title" />
+    <input placeholder="Blog post description" type="text" value="" name="desc" />
+    <textarea name="content"></textarea>
+    <button>Post</button>
   </form>
   <div class="blogpost">
     <h1></h1>
@@ -12,3 +15,6 @@
     <div></div>
   </div>
 </div>
+<script>
+  (function () {})();
+</script>

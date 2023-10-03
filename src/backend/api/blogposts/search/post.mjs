@@ -21,7 +21,6 @@ export const callback = async (req, res) => {
       }
     }
 
-    res.appendHeader('HX-Trigger', { listLoaded: true });
     res.send(bloglistItems);
   }
 

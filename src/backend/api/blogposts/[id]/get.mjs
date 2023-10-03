@@ -14,6 +14,7 @@ export const callback = async (req, res) => {
   const entry = blogposts[req.params.id];
 
   function sendResponse(html) {
+    res.append('HX-Trigger', 'blogLoaded');
     res.send(
       html
         .replaceAll('{$title}', entry.title)
