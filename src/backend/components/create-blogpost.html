@@ -1,20 +1,32 @@
 <div class="create-blogpost-wrapper">
-  <form
-    hx-post="http://localhost:3003/api/blogposts/create/submit"
-    hx-trigger="submit"
-    hx-target=".main-content-wrapper"
-  >
-    <input placeholder="Blog post title" type="text" value="" name="title" />
-    <input placeholder="Blog post description" type="text" value="" name="desc" />
-    <textarea name="content"></textarea>
+  <form hx-post="/blogposts/create/submit" hx-trigger="submit" hx-target=".main-content-wrapper">
+    <input
+      required
+      id="title-input"
+      placeholder="Blog post title"
+      type="text"
+      value=""
+      name="title"
+    />
+    <input id="desc-input" placeholder="Blog post description" type="text" value="" name="desc" />
+    <textarea required id="content-input" name="content"></textarea>
     <button>Post</button>
   </form>
   <div class="blogpost">
-    <h1></h1>
-    <h2></h2>
-    <div></div>
+    <h1 id="title-preview"></h1>
+    <h2 id="desc-preview"></h2>
+    <div id="content-preview"></div>
   </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <script>
-  (function () {})();
+  document.getElementById('title-input').addEventListener('input', (e) => {
+    document.getElementById('title-preview').innerHTML = marked.parse(e.target.value);
+  });
+  document.getElementById('desc-input').addEventListener('input', (e) => {
+    document.getElementById('desc-preview').innerHTML = marked.parse(e.target.value);
+  });
+  document.getElementById('content-input').addEventListener('input', (e) => {
+    document.getElementById('content-preview').innerHTML = marked.parse(e.target.value);
+  });
 </script>

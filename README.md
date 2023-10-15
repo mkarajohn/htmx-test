@@ -2,35 +2,29 @@
 
 **Node v18+ required.**
 
-There are no fancy build scripts and auto runners.
+There are no fancy build scripts.
 
-Start the content server with `npm run server`. Contents are served from the `dist/` dir, so make 
-sure to have "built" the frontend files first
+Start the content server with `npm run server`. CSS is served from `public/`
 
-Start the api server with `npm run api`
+Server restarts automatically on file changes.
 
-Build the frontend manually whenever you make a change to anything in the `frontend/` dir by running 
-`npm run build`
-
-Changes to the api or the content server require a server restart in order to take effect.
-
-If you want to feel fancy you can have the `tailwindcss` process watch for changes in your CSS files 
-with `tailwind:watch` but you probably won't need it.
+CSS generation only runs on server start. If you want to rebuild your CSS you will have to run
+`npm run tailwind`
 
 **DISCLAIMER**
-
-This is not finished (it will be when there is parity with [this](https://github.com/mkarajohn/orfium-react-workshop-demo-app/tree/third-pass))
-
-There are still some bugs and unresolved problems
-
+This is now considered finished as it has reached feature parity with 
+[this](https://github.com/mkarajohn/orfium-react-workshop-demo-app/tree/third-pass)), for the most part
 
 ## Things that work
 
-* The api returns html instead of json
-* the bloglist on the left loads and is searchable
-* The blog content shows and closes based on selected blog item from the list
-* You can create a new blogpost and submit it
+- The api returns html instead of json
+- the bloglist on the left loads and is searchable
+- The blog content shows and closes based on selected blog item from the list
+- You can create a new blogpost and submit it
+- The preview panel during blog creation
 
-## Things that don't work
+## Things that don't work (kinda)
 
-* The preview panel during blog creation
+- Expanded/collapsed state of the list items is not consistent when the list updates completely (e.g. after a search)
+- Adding a new bloglist while in search will show the new entry even if it does not match the search criteria
+

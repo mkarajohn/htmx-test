@@ -1,13 +1,14 @@
-<button
+<a
   id="close-blog-post-button"
   tabindex="1"
-  class="close-blogpost-button"
-  hx-get="http://localhost:3003/api/blogposts/close"
-  hx-trigger="click"
+  class="button close-blogpost-button"
+  href="/"
+  hx-boost="true"
+  hx-swap="innerHTML"
   hx-target=".main-content-wrapper"
 >
   Close
-</button>
+</a>
 <div class="blogpost">
   <h1>{$title}</h1>
   <h2>{$desc}</h2>
