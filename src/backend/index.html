@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/" />
+    <link href="/public/index.css" rel="stylesheet" />
+    <script
+      src="https://unpkg.com/htmx.org@1.9.6"
+      integrity="sha384-FhXw7b6AlE/jyjlZH5iHa/tTe9EpJ1Y55RjcgPbjeWMskSxZt1v9qkxLJWNJaGni"
+      crossorigin="anonymous"
+    ></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HTMX Demo App</title>
+  </head>
+  <body>
+    <div id="root">
+      <main class="app-wrapper">
+        <div class="sidebar-wrapper">
+          <div class="sidebar">
+            <input
+              tabindex="2"
+              placeholder="Search blog posts"
+              type="search"
+              name="search"
+              hx-post="/blogposts/search"
+              hx-trigger="keyup changed delay:300ms, search"
+              hx-target="#blog-list-container"
+            />
+            <div>
+              <div id="blog-list-container">{$blogslist}</div>
+            </div>
+            <div id="action-button-container">{$action}</div>
+          </div>
+        </div>
+        <div data-main-content-wrapper class="main-content-wrapper">{$content}</div>
+      </main>
+    </div>
+    <script>
+      let activeBlogListItem = document.querySelector('.blog-list-item.selected');
+
+      function setNewActiveBlogPostItem(el) {
+        debugger;
+        activeBlogListItem?.classList?.remove('selected');
+        el?.classList?.add('selected');
+        activeBlogListItem = el;
+      }
+
+      // Single listener for clicking on blog list items
+      window.addEventListener('click', (e) => {
+        if (e.target.matches('.blog-list-item, .blog-list-item *')) {
+          const newActiveBlogListItem = e.target.closest('.blog-list-item');
+          setNewActiveBlogPostItem(newActiveBlogListItem);
+        }
+      });
+
+      document.body.addEventListener('noSelection', () => {
+        setNewActiveBlogPostItem(null);
+      });
+
+      document.body.addEventListener('blogpostsRefetched', () => {
+        setTimeout(() => {
+          setNewActiveBlogPostItem(document.querySelector('.blog-list-item.selected'));
+        }, 100);
+      });
+
+      document.body.addEventListener('postSubmitted', () => {
+        setTimeout(() => {
+          // Clear any previously active link before quering for the new one
+          setNewActiveBlogPostItem(null);
+          setNewActiveBlogPostItem(document.querySelector('.blog-list-item.selected'));
+          activeBlogListItem.scrollIntoView({ behavior: 'smooth' });
+        }, 100);
+      });
+    </script>
+  </body>
+</html>

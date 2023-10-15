@@ -1,22 +1,22 @@
 {
   "name": "htmx_test",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "",
   "main": "index.js",
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tailwindcss -i src/frontend/index.css -o ./dist/index.css && cp src/frontend/index.html dist/index.html",
-    "tailwind:watch": "tailwindcss -i src/frontend/index.css -o ./dist/index.css --watch",
-    "api": "node src/backend/api.mjs",
-    "server": "node src/backend/server.mjs"
+    "tailwind": "tailwindcss -i src/backend/index.css -o public/index.css",
+    "tailwind:watch": "tailwindcss -i src/backend/index.css -o public/index.css --watch",
+    "server": "npm run tailwind & nodemon -e js,mjs,cjs,json,html src/backend/server.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "node-match-path": "^0.6.3"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^6.7.3",
@@ -24,6 +24,7 @@
     "autoprefixer": "^10.4.16",
     "eslint": "^8.50.0",
     "eslint-config-prettier": "^9.0.0",
+    "nodemon": "^3.0.1",
     "postcss": "^8.4.31",
     "prettier": "^2.8.8",
     "prettier-plugin-organize-imports": "^3.2.3",

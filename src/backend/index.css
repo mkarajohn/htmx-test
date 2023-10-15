@@ -2,6 +2,52 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  h1 {
+    @apply text-4xl;
+  }
+
+  h2 {
+    @apply text-3xl;
+  }
+
+  h3 {
+    @apply text-2xl;
+  }
+
+  h4,
+  h5,
+  h6 {
+    @apply text-xl;
+  }
+
+  ul {
+    padding: revert;
+    @apply list-disc;
+  }
+
+  ol {
+    padding: revert;
+    @apply list-decimal;
+  }
+
+  p {
+    @apply my-4;
+  }
+
+  code {
+    @apply rounded border border-gray-300 px-2 py-1 font-mono;
+  }
+
+  pre > code {
+    @apply my-4 block p-4;
+  }
+
+  blockquote {
+    @apply my-4 rounded border-l-4 border-gray-300 bg-white p-4;
+  }
+}
+
 @layer components {
   /* App */
   .app-wrapper {
@@ -18,7 +64,7 @@
 
   /* Bloglist items */
   .blog-list-item {
-    @apply cursor-pointer rounded border border-gray-200 bg-gray-100 shadow-none transition-all;
+    @apply cursor-pointer cursor-pointer rounded border border-gray-200 bg-gray-100 text-zinc-900 shadow-none transition-all;
   }
 
   .blog-list-item.selected {
@@ -26,7 +72,7 @@
   }
 
   .blog-list-item > :last-child {
-    @apply truncate p-4 pt-0 text-base;
+    @apply truncate p-4 pt-0 text-base !text-zinc-900;
   }
 
   .blog-list-item > :first-child {
@@ -115,61 +161,12 @@
 
   /* View Blogpost */
   .close-blogpost-button {
-    @apply fixed right-8 top-8 rounded-2xl bg-white;
+    @apply fixed right-8 top-8 rounded-2xl !bg-white text-zinc-900;
   }
 
   .no-selected-blogpost-message {
     @apply p-4 text-xl italic;
   }
-}
-
-@layer base {
-  h1 {
-    @apply text-4xl;
-  }
-
-  h2 {
-    @apply text-3xl;
-  }
-
-  h3 {
-    @apply text-2xl;
-  }
-
-  h4,
-  h5,
-  h6 {
-    @apply text-xl;
-  }
-
-  ul {
-    padding: revert;
-    @apply list-disc;
-  }
-
-  ol {
-    padding: revert;
-    @apply list-decimal;
-  }
-
-  p {
-    @apply my-4;
-  }
-
-  code {
-    @apply rounded border border-gray-300 px-2 py-1 font-mono;
-  }
-
-  pre > code {
-    @apply my-4 block p-4;
-  }
-
-  blockquote {
-    @apply my-4 rounded border-l-4 border-gray-300 bg-white p-4;
-  }
-}
-
-@layer components {
 }
 
 @layer utilities {
@@ -221,7 +218,8 @@ h1 {
   line-height: 1.1;
 }
 
-button {
+button,
+.button {
   border-radius: 8px;
   border: 1px solid transparent;
   padding: 0.6em 1.2em;
