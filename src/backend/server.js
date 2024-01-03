@@ -21,11 +21,26 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/public', express.static('public'));
 
+/*
+ * IMPORTANT!
+ *
+ * We are always checking if a request includes the `hx-request` header in all of our GET handlers.
+ * The reason we do this is in order to handle the required resource differently based on whether the
+ * request came from HTMX or from the user (by hard-navigating to the URL from the address bar)
+ *
+ * e.g. If a user hits the localhost:3000/:id route by navigating there from the address bar we want
+ * to serve the complete HTML of our app. However, if the request for localhost:3000/:id came from
+ * HTMX instead (i.e. includes the `hx-request` header) we do not want to serve the HTML of the
+ * whole application again, we only want to serve a partial HTML that only includes the content of
+ * the requested blog that HTMX will handle for us.
+ */
+
 app.get('/', async function (req, res) {
   const { default: db } = await import('./db.json', { assert: { type: 'json' } });
   const bloglistItems = generateBlogPosts(db);
 
   if (req.get('hx-request')) {
+    // We fire this in order to deselect any selected list item (see the script at the end of index.html)
     res.append('HX-Trigger', 'noSelection');
     res.send(noContentHTML);
   } else {
@@ -89,12 +104,13 @@ app.post('/blogposts/search', async (req, res) => {
 
   const bloglistItems = generateBlogPosts(db, activeID, searchTerm);
 
+  // We fire this in order to reselect the selected list item if it exists in the new list (see the script at the end of index.html)
   res.append('HX-Trigger', 'blogpostsRefetched');
   res.send(bloglistItems);
 });
 
 app.get('/blogposts/create', async (req, res) => {
-  // Prevent vieweing "non-view" endpoints
+  // Prevent viewing "non-view" endpoints
   if (!req.get('hx-request')) {
     res.redirect('/');
   } else {
@@ -148,6 +164,7 @@ app.post('/blogposts/create/submit', async (req, res) => {
           .replaceAll('{$id}', `${newEntryID}`) +
         '</div>';
 
+      // We fire this in order to select the new list item and scroll it into view(see the script at the end of index.html)
       res.append('HX-Trigger-After-Settle', 'postSubmitted');
       res.append('HX-Push-Url', `/${newEntryID}`);
       res.send(

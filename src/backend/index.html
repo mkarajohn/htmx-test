@@ -36,41 +36,45 @@
       </main>
     </div>
     <script>
-      let activeBlogListItem = document.querySelector('.blog-list-item.selected');
+      (function () {
+        let activeBlogListItem = document.querySelector('.blog-list-item.selected');
 
-      function setNewActiveBlogPostItem(el) {
-        debugger;
-        activeBlogListItem?.classList?.remove('selected');
-        el?.classList?.add('selected');
-        activeBlogListItem = el;
-      }
-
-      // Single listener for clicking on blog list items
-      window.addEventListener('click', (e) => {
-        if (e.target.matches('.blog-list-item, .blog-list-item *')) {
-          const newActiveBlogListItem = e.target.closest('.blog-list-item');
-          setNewActiveBlogPostItem(newActiveBlogListItem);
+        function setNewActiveBlogPostItem(el) {
+          activeBlogListItem?.classList?.remove('selected');
+          el?.classList?.add('selected');
+          activeBlogListItem = el;
         }
-      });
 
-      document.body.addEventListener('noSelection', () => {
-        setNewActiveBlogPostItem(null);
-      });
+        // Single listener for clicking on blog list items
+        window.addEventListener('click', (e) => {
+          if (e.target.matches('.blog-list-item, .blog-list-item *')) {
+            const newActiveBlogListItem = e.target.closest('.blog-list-item');
+            setNewActiveBlogPostItem(newActiveBlogListItem);
+          }
+        });
 
-      document.body.addEventListener('blogpostsRefetched', () => {
-        setTimeout(() => {
-          setNewActiveBlogPostItem(document.querySelector('.blog-list-item.selected'));
-        }, 100);
-      });
-
-      document.body.addEventListener('postSubmitted', () => {
-        setTimeout(() => {
-          // Clear any previously active link before quering for the new one
+        // We fire this event from htmx when we hit the Close button
+        document.body.addEventListener('noSelection', () => {
           setNewActiveBlogPostItem(null);
-          setNewActiveBlogPostItem(document.querySelector('.blog-list-item.selected'));
-          activeBlogListItem.scrollIntoView({ behavior: 'smooth' });
-        }, 100);
-      });
+        });
+
+        // We fire this event from htmx when the list items are refetched
+        document.body.addEventListener('blogpostsRefetched', () => {
+          setTimeout(() => {
+            setNewActiveBlogPostItem(document.querySelector('.blog-list-item.selected'));
+          }, 100);
+        });
+
+        // We fire this event from htmx when we submit a new blog post
+        document.body.addEventListener('postSubmitted', () => {
+          setTimeout(() => {
+            // Clear any previously active link before quering for the new one
+            setNewActiveBlogPostItem(null);
+            setNewActiveBlogPostItem(document.querySelector('.blog-list-item.selected'));
+            activeBlogListItem.scrollIntoView({ behavior: 'smooth' });
+          }, 100);
+        });
+      })();
     </script>
   </body>
 </html>
